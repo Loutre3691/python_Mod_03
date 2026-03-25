@@ -1,7 +1,7 @@
 import random
 
 
-def gen_player_achievements() -> set:
+def list_achievement() -> list:
     all_achievement = [
         "Crafting Genius",
         "Strategist",
@@ -17,58 +17,65 @@ def gen_player_achievements() -> set:
         "Sharp Mind",
         "Boss Slayer"
     ]
+    return all_achievement
+
+
+def gen_player_achievements() -> set:
+    all_achievement = list_achievement()
+
     nb = random.randint(1, len(all_achievement))
     list_random = set(random.sample(all_achievement, nb))
     return list_random
+# create a achievement list and choose a random achievement
 
 
-def common_achievement(list: set) -> list:
+def common_achievement(data_players: dict) -> set:
+    common = set.intersection(*data_players.values())
+    return common
+# search and compare the dict to find common achievements
+# * = depacking
 
-        set.union(list)
+
+def find_unique_achievement(data_players: dict) -> None:
+    for player in data_players:
+        data_set = data_players[player]
+
+        other_set = []
+        for o in data_players:
+            if o != player:
+                other_set.append(data_players[o])
+# collect all other players achievements in a list
+
+        unique = data_set.difference(*other_set)
+# find achievements that belong only to this player
+
+        print(f"only {player} has: {unique}")
+
+
+def missing_achievement(data_players: dict) -> None:
+    all_achievement = list_achievement()
+    for player in data_players:
+        data_set = data_players[player]
+        missing = set(all_achievement).difference(data_set)
+        print(f"{player} is missing: {missing}")
+# convert all_achievement list to set and find what each player is missing
 
 
 if __name__ == "__main__":
     print("\033[1;35m\n=== Achievement Tracker System ===\033[0m\n")
     players = [
-        "\033[0;95mFlora\033[0m",
-        "\033[0;96mPierre\033[0m",
-        "\033[0;33mChloe\033[0m",
-        "\033[0;91mPaco\033[0m"
+        "\033[1;32mFlora\033[0m",
+        "\033[1;36mPierre\033[0m",
+        "\033[1;33mChloe\033[0m",
+        "\033[1;31mPaco\033[0m"
     ]
+    data_players = {}
     for p in players:
-        list_random = gen_player_achievements()
-        print(f"{p} : {list_random}")
-    common = common_achievement(list_random)
-    print(f"\nCommon achievement: {'common'}\n")
+        data_players[p] = gen_player_achievements()
+        print(f"{p} : {data_players[p]}")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# creation d'un system qui repertories les succes des joueurs
-# fonction gen_player_achivement:
-# - utilisera une longue list fixe de succes
-# - choisir aleatoirement un nombre de succes
-# 
-# il faudra: 
-# generer des sets de succes pour min 4 joueurs
-# trouver les succes uniques parmis tous les joueurs
-# trouver les succes partages par tous les joueurs
-# pour chaque joueur, reperer les succes qu il est le seul a avoir
-# pour chaque joueur, lister les succes qui lui manque pour les avoir tous
+    common = common_achievement(data_players)
+    print(f"\n\033[1;35mCommon achievement:\033[0m {common}\n")
+    find_unique_achievement(data_players)
+    print()
+    missing_achievement(data_players)
