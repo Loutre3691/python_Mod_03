@@ -6,17 +6,19 @@ def parse_argv(argv : list) -> dict:
         items = av.split(":")
 
         if len(items) != 2:
-            print("\033[0;31mError: invalid parameter\n\033[0m")
+            print(f"\033[0;31mError - invalid parameter '{av}'\033[0m")
+            continue
+        if items[0] in inventory:
+            print(f"\033[0;31mRedundant item '{items[0]}' - discarding\033[0m")
+            continue
 
         try:
             int(items[1])
         except:
-            print("\033[0;31mError: second parameter is not a number\n\033[0m")
+            print("\033[0;31mError: second parameter is not a number\033[0m")
+            continue
 
-        inventory[av] = items[1]
-
-
-
+        inventory[items[0]] = int(items[1])
 
     return inventory
 
@@ -26,27 +28,26 @@ if __name__ == "__main__":
 
     if len(sys.argv) < 2:
         print("\033[0;31mNo arguments provied!\033[0m\n")
-
     inventory = parse_argv(sys.argv[1:])
 
 
 
 # creation dun inventaire
-# - utiliation d'un dictionnaire pour stocker les donnees d'inventaires
+# - utiliation d'un dictionnaire pour stocker les donnees d'inventaires ok
 # - le code devrai parse les parametre de la ligne de commande pour remplir 
-#  l'inventaire
+#  l'inventaire ok
 #
 #  parametre formats :
-# - <item_names>  and <quantity>
+# - <item_names>  and <quantity> ok
 #
 # paramatere invalide avec messge d'erreur +  placer les valides dans un dictionnaire
-# - syntaxe incorrect
-# - paramatere dedondant
+# - syntaxe incorrect ok
+# - paramatere dedondant ok 
 #
-# Les valeurs <quantite> devront etre des int pour les calucls
+# Les valeurs <quantite> devront etre des int pour les calucls ok
 #
 # gestion inventaire:
-# - afficher l'invetaire
+# - afficher l'inventaire
 # - creer et afficher la list de tous les objets en stock
 # - calculer et imprimer la quqntite tota de tous les onbjets de l inventaire
 # - afficher pour chaque objet le % de quantite qu il represente dans l inventaire
