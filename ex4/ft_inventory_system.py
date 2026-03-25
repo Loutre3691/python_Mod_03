@@ -5,6 +5,19 @@ def parse_argv(argv : list) -> dict:
     for av in argv:
         items = av.split(":")
 
+        if len(items) != 2:
+            print("\033[0;31mError: invalid parameter\n\033[0m")
+
+        try:
+            int(items[1])
+        except:
+            print("\033[0;31mError: second parameter is not a number\n\033[0m")
+
+        inventory[av] = items[1]
+
+
+
+
     return inventory
 
 
@@ -12,21 +25,9 @@ if __name__ == "__main__":
     print("\033[1;35m\n==== Inventory system Analysis ===\033[0m\n")
 
     if len(sys.argv) < 2:
-        print("No arguments provied!")
+        print("\033[0;31mNo arguments provied!\033[0m\n")
 
-    parse_argv(sys.argv)
-
-        
-
-            
-    
-      
-
-
-  
-    
-
-
+    inventory = parse_argv(sys.argv[1:])
 
 
 
