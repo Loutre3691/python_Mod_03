@@ -1,4 +1,4 @@
-import typing
+from typing import Generator
 import random
 
 
@@ -13,7 +13,8 @@ players = [
     "Thomas",
     "Noah",
     "Emilie",
-    "Louis"
+    "Louis",
+    "killian"
     ]
 
 
@@ -30,46 +31,44 @@ actions = [
     "poop 💩",
     "speak mewww 🐈",
     "sing Beyonce 🐝👑",
-    "blackall 🚨"
+    "blackhole 🚨",
+    "paye bbq 🍖"
 ]
 
-def gen_event(players: list, actions: list):
+
+def gen_event() -> Generator:
     while True:
         random_player = random.choice(players)
         random_action = random.choice(actions)
         yield (random_player, random_action)
+# Random choice in list player and action
 
 
+def consume_event(new_list: list) -> Generator:
+    while len(new_list) > 0:
+        choice = random.choice(new_list)
+        new_list.remove(choice)
+        yield choice
+# random choice in list 10 tuple in the before list
 
-# def consume_event() -> None:
 
 if __name__ == "__main__":
     print("\033[1;35m\n==== Game Data Stream Processor ===\033[0m\n")
 
-    my_gen = gen_event(players, actions)
+    my_gen = gen_event()
 
-    for event in range(1000):
+    for i in range(1000):
         player, action = next(my_gen)
-        print(f"Event {event}: Player {player} did action {action}")
+        print(f"\033[1;37mEvent {i}\033[0m: Player {player} did action "
+              f"{action}")
 
+    new_list = []
+    for event in range(10):
+        p, a = next(my_gen)
+        new_list.append((p, a))
+    print(f"\n\033[1;31m\nBuilt list of 10 events:\033[0m{new_list}\n")
 
-
-
-
-
-# GENERATEURS : Pour economiser de la memoire
-# utilisation de generateurs avec le mot cle "yield" pour creer des fluxs de donnees
-# implemeter des fonctions generatrices qui produisent des valeurs a la demande
-# 
-# fonction gen_event(fonction generatrice):
-# - choisi un nom aleatoire dans une liste de joueurs ok 
-# - choisi une action aleatoire dans une liste d'action ok 
-# - a chaque appel de 'next()' sur ce generateur -> renvoie tuple (nom + action)
-#
-# Boucler 1000 x et afficher 1000 evenements creer grace a gen_event() ok
-# 
-# Creer une liste de 10 tuples generer par gen_event()
-# Creer une nouvelle fonction generatrice 'consume_event' que prend la liste des 10 tuples cree avant
-#
-# Choisir aleatoirement un element de la liste tuple, le retirer de la liste et le renvoyer
-# jusqu'a que la liste soit vide.
+    for i in range(10):
+        choice = next(consume_event(new_list))
+        print(f"\033[1;31mGot event from list: \033[0m{choice}")
+        print(f"\033[1;32mRemains in list:\033[0m {new_list}\n")
