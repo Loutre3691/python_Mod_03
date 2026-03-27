@@ -1,6 +1,7 @@
 import sys
 
-def parse_argv(argv : list) -> dict:
+
+def parse_argv(argv: list) -> dict:
     inventory = {}
     for av in argv:
         items = av.split(":")
@@ -14,13 +15,50 @@ def parse_argv(argv : list) -> dict:
 
         try:
             int(items[1])
-        except:
-            print("\033[0;31mError: second parameter is not a number\033[0m")
+        except ValueError:
+            print(f"\033[0;31mQuantity error for '{items[0]}': invalid literal"
+                  f" for int() with base 10: '{items[1]}'\033[0m")
             continue
 
         inventory[items[0]] = int(items[1])
 
     return inventory
+# parsing argument
+
+
+def percent_represent(inventory: dict, total_items: int) -> None:
+    for key, value in zip(list(inventory.keys()), list(inventory.values())):
+        percent_item = (value * 100) / total_items
+        print(f"Item {key} represents: {percent_item:.1f}%")
+# zip allows you to browse keys and values ​​at the same time but
+# separately and calculates %
+
+
+def most_least_quantity(inventory: dict) -> None:
+    values_inventory = list(inventory.values())
+    keys_inventory = list(inventory.keys())
+    max_value = values_inventory[0]
+    key_max = keys_inventory[0]
+    min_value = values_inventory[0]
+    key_min = keys_inventory[0]
+
+    for key, value in zip(keys_inventory, values_inventory):
+        if value > max_value:
+            key_max = key
+            max_value = value
+        elif value < min_value:
+            key_min = key
+            min_value = value
+
+    print(f"\033[1;37m\nItem most abundant: \033[0m{key_max} with quantity"
+          f" {max_value}")
+    print(f"\033[1;37mItem least abundant: \033[0m{key_min} with quantity "
+          f"{min_value}")
+
+
+def add_new_item(inventory: dict) -> None:
+    inventory.update({"magic_item": 1})
+    print(f"\n\033[1;37mUpdated inventory:\033[0m {inventory}")
 
 
 if __name__ == "__main__":
@@ -28,29 +66,21 @@ if __name__ == "__main__":
 
     if len(sys.argv) < 2:
         print("\033[0;31mNo arguments provied!\033[0m\n")
+        exit()
     inventory = parse_argv(sys.argv[1:])
 
+    if len(inventory) == 0:
+        exit()
 
+    print(f"\n\033[1;37mGot inventory:\033[0m {inventory}")
 
-# creation dun inventaire
-# - utiliation d'un dictionnaire pour stocker les donnees d'inventaires ok
-# - le code devrai parse les parametre de la ligne de commande pour remplir 
-#  l'inventaire ok
-#
-#  parametre formats :
-# - <item_names>  and <quantity> ok
-#
-# paramatere invalide avec messge d'erreur +  placer les valides dans un dictionnaire
-# - syntaxe incorrect ok
-# - paramatere dedondant ok 
-#
-# Les valeurs <quantite> devront etre des int pour les calucls ok
-#
-# gestion inventaire:
-# - afficher l'inventaire
-# - creer et afficher la list de tous les objets en stock
-# - calculer et imprimer la quqntite tota de tous les onbjets de l inventaire
-# - afficher pour chaque objet le % de quantite qu il represente dans l inventaire
-# - indiquer les articles les plus et les moins abondants(chosir le 1er resultat sur la
-#   ligne de commande en cas d'egalite)
-# - enfin ajoueter un nouvel rticle a ton inventaire et l'afficher a nouveau
+    print(f"\033[1;37mItem list:\033[0m {list(inventory.keys())}\n")
+
+    total_items = sum(inventory.values())
+    print(f"\033[1;37mTotal quantity of the 5 items: \033[0m{total_items}\n")
+
+    percent_represent(inventory, total_items)
+
+    most_least_quantity(inventory)
+
+    add_new_item(inventory)
